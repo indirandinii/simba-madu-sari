@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login SIMBA - Desa Madu Sari</title>
     <style>
-        /* Tema Warna Cokelat dan Krem (Senada dengan Dashboard) */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #F9F6F0; 
@@ -16,7 +15,6 @@
             margin: 0;
         }
 
-        /* Kotak login utama */
         .login-card {
             background-color: #FFFFFF;
             width: 100%;
@@ -27,7 +25,6 @@
             border-top: 5px solid #5C4033;
         }
 
-        /* Header logo dan judul */
         .login-header {
             text-align: center;
             margin-bottom: 30px;
@@ -47,7 +44,6 @@
             line-height: 1.5;
         }
 
-        /* Grup form masukan */
         .form-group {
             margin-bottom: 20px;
         }
@@ -79,7 +75,6 @@
             background-color: #FFFFFF;
         }
 
-        /* Tombol login */
         .login-btn {
             width: 100%;
             padding: 14px;
@@ -97,7 +92,6 @@
             background-color: #7B4B3A;
         }
 
-        /* Teks bantuan di bawah */
         .help-text {
             text-align: center;
             margin-top: 20px;
@@ -146,11 +140,22 @@
 
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Mencegah halaman me-refresh
+            event.preventDefault(); 
+            const role = document.getElementById('role').value;
             const username = document.getElementById('username').value;
 
-            // Memunculkan pesan pop-up, lalu otomatis pindah ke dashboard.html
-            alert('Selamat datang, ' + username + '! Mengarahkan ke Dashboard...');
+            // Mengarahkan sesuai peran yang dipilih ke dashboard.html
+            if (role === 'penyuluh') {
+                alert('Selamat datang, ' + username + '! Masuk sebagai Penyuluh Pertanian.');
+            } else if (role === 'dinas') {
+                alert('Selamat datang, ' + username + '! Masuk sebagai Dinas Pertanian.');
+            } else if (role === 'autp') {
+                alert('Selamat datang, ' + username + '! Masuk sebagai Petugas AUTP.');
+            } else if (role === 'akademisi') {
+                alert('Selamat datang, ' + username + '! Masuk sebagai Peneliti/Akademisi.');
+            }
+
+            // Langsung masuk ke halaman dashboard utama
             window.location.href = 'dashboard.html';
         });
     </script>
