@@ -8,7 +8,7 @@
         /* Tema Warna Cokelat dan Krem (Senada dengan Dashboard) */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #F9F6F0; /* Putih gading / krem lembut khas nuansa tanah */
+            background-color: #F9F6F0; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -34,7 +34,7 @@
         }
 
         .login-header h1 {
-            color: #5C4033; /* Cokelat Tanah */
+            color: #5C4033; 
             font-size: 32px;
             margin: 0 0 10px 0;
             letter-spacing: 2px;
@@ -146,20 +146,12 @@
 
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const role = document.getElementById('role').value;
+            event.preventDefault(); // Mencegah halaman me-refresh
             const username = document.getElementById('username').value;
 
-            if (role === 'penyuluh') {
-                alert('Selamat datang, ' + username + '! Mengarahkan ke Dashboard Penyuluh Pertanian...');
-            } else if (role === 'dinas') {
-                alert('Selamat datang, ' + username + '! Mengarahkan ke Dashboard Dinas Pertanian...');
-                // window.location.href = 'dinas-dashboard.html';
-            } else if (role === 'autp') {
-                alert('Selamat datang, ' + username + '! Mengarahkan ke Dashboard Asuransi AUTP...');
-            } else if (role === 'akademisi') {
-                alert('Selamat datang, ' + username + '! Mengarahkan ke Dashboard Peneliti...');
-            }
+            // Memunculkan pesan pop-up, lalu otomatis pindah ke dashboard.html
+            alert('Selamat datang, ' + username + '! Mengarahkan ke Dashboard...');
+            window.location.href = 'dashboard.html';
         });
     </script>
 
