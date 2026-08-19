@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Dinas Pertanian - SIMBA Madu Sari</title>
+    <!-- Memuat Leaflet CSS untuk Peta Interaktif -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #F9F6F0; /* Putih gading / krem lembut khas nuansa tanah */
+            display: flex;
+        }
+
+        /* Sidebar Navigasi - Tema Cokelat */
+        sidebar {
+            width: 260px;
+            background-color: #5C4033; /* Cokelat Tanah / Gambut */
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .sidebar-brand h2 {
+            margin: 0 0 5px 0;
+            font-size: 24px;
+            letter-spacing: 1px;
+            color: #FFFFFF;
+        }
+
+        .sidebar-brand p {
+            font-size: 11px;
+            color: #D2B48C; /* Cokelat muda / tan */
+            margin: 0 0 30px 0;
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-links li {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            color: #F9F6F0;
+        }
+
+        .nav-links li:hover, .nav-links li.active {
+            background-color: #7B4B3A; /* Cokelat sedikit lebih terang saat aktif/hover */
+        }
+
+        /* Konten Utama */
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+            width: calc(100% - 260px);
+            box-sizing: border-box;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .header-top h1 {
+            color: #5C4033;
+            margin: 0;
+            font-size: 22px;
+        }
+
+        /* Grid Kartu Ringkasan */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(92, 64, 51, 0.08);
+            border-top: 4px solid #5C4033;
+        }
+
+        .card h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .card .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #5C4033;
+        }
+
+        /* Bagian Peta dan Panel */
+        .grid-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .panel {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(92, 64, 51, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .panel h3 {
+            margin-top: 0;
+            color: #5C4033;
+            font-size: 16px;
+            border-bottom: 2px solid #EFEBE9;
+            padding-bottom: 10px;
+        }
+
+        /* Container Peta Asli */
+        #map {
+            height: 350px;
+            border-radius: 8px;
+        }
+
+        /* Tombol Download PDF */
+        .btn-pdf {
+            background-color: #8D4004; /* Cokelat kemerahan / Bata */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-pdf:hover {
+            background-color: #6E3103;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #EFEBE9;
+        }
+
+        table th {
+            color: #5C4033;
+        }
+
+        .badge-kritis {
+            background-color: #FBE9E7;
+            color: #D32F2F;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .badge-off {
+            background-color: #EFEBE9;
+            color: #6D4C41;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .page-section {
+            display: none;
+        }
+        .page-section.active-page {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <sidebar>
+        <div class="sidebar-brand">
+            <h2>SIMBA</h2>
+            <p>Desa Madu Sari, Kubu Raya</p>
+        </div>
+        <ul class="nav-links">
+            <li class="active" onclick="switchPage('dashboard', this)">Dashboard Dinas</li>
+            <li onclick="switchPage('monitoring', this)">Monitoring Seluruh Sensor</li>
+            <li onclick="switchPage('grafik', this)">Grafik Bulanan</li>
+            <li onclick="switchPage('prediksi', this)">Prediksi Lahan Terdampak</li>
+            <li onclick="switchPage('laporan', this)">Unduh Laporan PDF</li>
+        </ul>
+    </sidebar>
+
+    <!-- KONTEN UTAMA -->
+    <div class="main-content">
+
+        <!-- 1. HALAMAN DASHBOARD -->
+        <div id="page-dashboard" class="page-section active-page">
+            <div class="header-top">
+                <h1>Dashboard Eksekutif - Dinas Pertanian</h1>
+                <a href="laporan-simba.pdf" download class="btn-pdf">📥 Download Laporan PDF</a>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Status Sensor Desa</h3>
+                    <div class="value" style="font-size: 18px; color: #5C4033;">21 Aktif / 3 Off</div>
+                    <p style="font-size: 11px; color: #795548; margin: 5px 0 0 0;">Total 24 Sensor (Pilot Project)</p>
+                </div>
+                <div class="card">
+                    <h3>Rata-rata TMAT Desa</h3>
+                    <div class="value">55 cm</div>
+                </div>
+                <div class="card">
+                    <h3>Status Lahan Gambut</h3>
+                    <div class="value" style="color: #D32F2F;">Waspada / Kritis</div>
+                </div>
+                <div class="card">
+                    <h3>Prediksi Lahan Terdampak</h3>
+                    <div class="value">± 2.5 Hektar</div>
+                </div>
+            </div>
+
+            <div class="grid-section">
+                <div class="panel">
+                    <h3>Peta Real-Time Sebaran Sensor (Kec. Sungai Raya, Kab. Kubu Raya)</h3>
+                    <div id="map"></div>
+                </div>
+                <div class="panel">
+                    <h3>Analisis & Alternatif Mitigasi</h3>
+                    <p style="font-size: 13px; color: #555; line-height: 1.6;">
+                        Berdasarkan data sensor di Zona C, mitigasi tidak hanya sebatas penambahan sekat kanal, tetapi juga dapat melalui pengaturan pintu air otomatis atau penanaman komoditas adaptif (sagu/nenas).
+                    </p>
+                    <div style="background: #FFF8E1; padding: 10px; border-radius: 6px; font-size: 12px; color: #8D6E63; margin-top: 15px; border-left: 4px solid #FFA000;">
+                        ⚠️ <b>Peringatan Otomatis:</b> SMS peringatan telah dikirim ke petani di wilayah pilot project.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. HALAMAN MONITORING SELURUH SENSOR -->
+        <div id="page-monitoring" class="page-section">
+            <div class="header-top">
+                <h1>Monitoring Seluruh Sensor Lahan Gambut (24 Titik)</h1>
+            </div>
+            <div class="panel">
+                <h3>Daftar Sensor (3 Sensor per Blok Lahan Uji Coba)</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Sensor</th>
+                            <th>Blok Lahan / Zona</th>
+                            <th>Posisi Sensor</th>
+                            <th>TMAT</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>SNS-001</td><td>Lahan Blok 1</td><td>Dekat Sekat Kanal</td><td>45 cm</td><td><span style="color: #2E7D32; font-weight: bold;">Aktif (Normal)</span></td></tr>
+                        <tr><td>SNS-002</td><td>Lahan Blok 1</td><td>Tengah Lahan</td><td>52 cm</td><td><span style="color: #2E7D32; font-weight: bold;">Aktif (Normal)</span></td></tr>
+                        <tr><td>SNS-003</td><td>Lahan Blok 1</td><td>Jauh dari Kanal</td><td>60 cm</td><td><span style="color: #EF6C00; font-weight: bold;">Aktif (Waspada)</span></td></tr>
+                        <tr><td>SNS-004</td><td>Lahan Blok 2</td><td>Dekat Sekat Kanal</td><td>44 cm</td><td><span style="color: #2E7D32; font-weight: bold;">Aktif (Normal)</span></td></tr>
+                        <tr><td>SNS-005</td><td>Lahan Blok 2</td><td>Tengah Lahan</td><td>53 cm</td><td><span style="color: #EF6C00; font-weight: bold;">Aktif (Waspada)</span></td></tr>
+                        <tr><td>SNS-006</td><td>Lahan Blok 2</td><td>Jauh dari Kanal</td><td>72 cm</td><td><span class="badge-kritis">Aktif (Kritis)</span></td></tr>
+                        <tr><td>SNS-007</td><td>Lahan Blok 3</td><td>Dekat Sekat Kanal</td><td>-</td><td><span class="badge-off">Dalam Pemeliharaan</span></td></tr>
+                        <tr><td>SNS-008</td><td>Lahan Blok 3</td><td>Tengah Lahan</td><td>50 cm</td><td><span style="color: #2E7D32; font-weight: bold;">Aktif (Normal)</span></td></tr>
+                        <tr><td>SNS-009</td><td>Lahan Blok 3</td><td>Jauh dari Kanal</td><td>68 cm</td><td><span class="badge-kritis">Aktif (Kritis)</span></td></tr>
+                        <tr><td>SNS-010</td><td>Lahan Blok 4</td><td>Dekat Sekat Kanal</td><td>46 cm</td><td><span style="color: #2E7D32; font-weight: bold;">Aktif (Normal)</span></td></tr>
+                        <tr><td>SNS-011</td><td>Lahan Blok 4</td><td>Tengah Lahan</td><td>51 cm</td><td><span style="color: #2E7D32; font-weight: bold;">Aktif (Normal)</span></td></tr>
+                        <tr><td>SNS-012</td><td>Lahan Blok 4</td><td>Jauh dari Kanal</td><td>62 cm</td><td><span style="color: #EF6C00; font-weight: bold;">Aktif (Waspada)</span></td></tr>
+                        <tr><td>SNS-013</td><td>Lahan Blok 5</td><td>Dekat Sekat Kanal</td><td>-</td><td><span class="badge-off">Dalam Pemeliharaan</span></td></tr>
+                        <tr><td>SNS-014</td><td>Lahan Blok 5</td><td>Tengah Lahan</td><td>55 cm</td><td><span style="color: #EF6C00; font-weight: bold;">Aktif (Waspada)</span></td></tr>
+                        <tr><td>SNS-015</td><td>Lahan Blok 5</td><td>Jauh dari Kanal</td><td>70 cm</td><td><span class="badge-kritis">Aktif (Kritis)</span></td></tr>
+                        <tr><td>SNS-016</td><td>Lahan Blok 6</td><td>Dekat Sekat Kanal</td><td>43 cm</td><td><span style="color: #2E7D32; font-weight: bold;">Aktif (Normal)</span></td></tr>
+                        <tr><td>SNS-017</td><td>Lahan Blok 6</td><td>Tengah Lahan</td><td>49 cm</td><td><span style="color: #2E7D32; font-weight: bold;">Aktif (Normal)</span></td></tr>
+                        <tr><td>SNS-018</td><td>Lahan Blok 6</td><td>Jauh dari Kanal</td><td>58 cm</td><td><span style="color: #2E7D32; font-weight: bold;">Aktif (Normal)</span></td></tr>
+                        <tr><td>SNS-019</td><td>Lahan Blok 7</td><td>Dekat Sekat Kanal</td><td>-</td><td><span class="badge-off">Dalam Pemeliharaan</span></td></tr>
+                        <tr><td>SNS-020</td><td>Lahan Blok 7</td><td>Tengah Lahan</td><td>52 cm</td><td><span style="color: #2E7D32; font-weight: bold;">Aktif (Normal)</span></td></tr>
+                        <tr><td>SNS-021</td><td>Lahan Blok 7</td><td>Jauh dari Kanal</td><td>65 cm</td><td><span style="color: #EF6C00; font-weight: bold;">Aktif (Waspada)</span></td></tr>
+                        <tr><td>SNS-022</td><td>Lahan Blok 8</td><td>Dekat Sekat Kanal</td><td>42 cm</td><td><span style="color: #2E7D32; font-weight: bold;">Aktif (Normal)</span></td></tr>
+                        <tr><td>SNS-023</td><td>Lahan Blok 8</td><td>Tengah Lahan</td><td>-</td><td><span class="badge-off">Dalam Pemeliharaan</span></td></tr>
+                        <tr><td>SNS-024</td><td>Lahan Blok 8</td><td>Jauh dari Kanal</td><td>74 cm</td><td><span class="badge-kritis">Aktif (Kritis)</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. HALAMAN GRAFIK BULANAN -->
+        <div id="page-grafik" class="page-section">
+            <div class="header-top">
+                <h1>Grafik Bulanan Tinggi Muka Air Tanah (TMAT)</h1>
+            </div>
+            <div class="panel">
+                <h3>Rekapitulasi Rata-rata TMAT (Pilot Project Desa Madu Sari)</h3>
+                <div style="background: #fff; padding: 20px; border-radius: 8px; text-align: center;">
+                    <canvas id="chartBulanan" height="100"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. HALAMAN PREDIKSI LAHAN TERDAMPAK -->
+        <div id="page-prediksi" class="page-section">
+            <div class="header-top">
+                <h1>Prediksi Luas Lahan Gambut Terdampak (Skala Pilot Project)</h1>
+            </div>
+            <div class="panel">
+                <h3>Analisis Zona Risiko Berdasarkan Referensi Jurnal</h3>
+                <p style="font-size: 14px; color: #555; line-height: 1.6;">
+                    Menyesuaikan dengan batasan wilayah riset jurnal acuan, berikut adalah estimasi luasan pada area pilot project:
+                </p>
+                <ul>
+                    <li><b>Zona Dekat Kanal:</b> Aman / Basah terjaga (0 Hektar)</li>
+                    <li><b>Zona Tengah Lahan:</b> ± 0.8 Hektar (Waspada)</li>
+                    <li><b>Zona Jauh dari Kanal:</b> ± 1.7 Hektar (Kritis / Perlu intervensi pengelolaan air)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 5. HALAMAN LAPORAN PDF -->
+        <div id="page-laporan" class="page-section">
+            <div class="header-top">
+                <h1>Unduh Laporan Resmi SIMBA</h1>
+            </div>
+            <div class="panel" style="text-align: center; padding: 40px;">
+                <h3>Dokumen Rekapitulasi Data Muka Air Tanah</h3>
+                <p style="color: #666; margin-bottom: 20px;">Unduh laporan lengkap dalam format PDF untuk arsip Dinas Pertanian Kabupaten Kubu Raya.</p>
+                <a href="laporan-simba.pdf" download class="btn-pdf" style="font-size: 16px; padding: 15px 30px;">📥 Download File PDF Sekarang</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script Leaflet & Chart.js -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const lat = -0.1535; 
+        const lng = 109.4182;
+        const map = L.map('map').setView([lat, lng], 14);
+
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri'
+        }).addTo(map);
+
+        L.marker([-0.1490, 109.4120]).addTo(map).bindPopup("<b>Blok 1 & 2</b><br>Pilot Project");
+        L.marker([-0.1535, 109.4182]).addTo(map).bindPopup("<b>Blok 3 & 4</b><br>Pilot Project");
+        L.marker([-0.1580, 109.4240]).addTo(map).bindPopup("<b>Blok 5 & 6</b><br>Pilot Project");
+        L.marker([-0.1510, 109.4250]).addTo(map).bindPopup("<b>Blok 7 & 8</b><br>Pilot Project");
+
+        function switchPage(pageId, element) {
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(p => p.classList.remove('active-page'));
+
+            document.getElementById('page-' + pageId).classList.add('active-page');
+
+            const navItems = document.querySelectorAll('.nav-links li');
+            navItems.forEach(li => li.classList.remove('active'));
+            element.classList.add('active');
+
+            if(pageId === 'grafik') {
+                renderChartBulanan();
+            }
+
+            if(pageId === 'dashboard') {
+                setTimeout(() => { map.invalidateSize(); }, 200);
+            }
+        }
+
+        let chartInstance = null;
+        function renderChartBulanan() {
+            const ctx = document.getElementById('chartBulanan').getContext('2d');
+            if(chartInstance) {
+                chartInstance.destroy();
+            }
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni'],
+                    datasets: [{
+                        label: 'Rata-rata TMAT (cm)',
+                        data: [48, 52, 50, 42, 55, 58],
+                        borderColor: '#5C4033',
+                        backgroundColor: 'rgba(92, 64, 51, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { min: 30, max: 80 }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
