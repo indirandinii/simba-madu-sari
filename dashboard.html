@@ -30,6 +30,7 @@
         .card h3 { margin: 0 0 10px 0; font-size: 14px; color: #666; }
         .card .value { font-size: 24px; font-weight: bold; color: #5C4033; }
 
+        .grid-section { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 25px; }
         .panel { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(92, 64, 51, 0.08); margin-bottom: 20px; }
         .panel h3 { margin-top: 0; color: #5C4033; font-size: 16px; border-bottom: 2px solid #EFEBE9; padding-bottom: 10px; }
 
@@ -51,13 +52,13 @@
 </head>
 <body>
 
-    <!-- FITUR SIMULASI LOGIN (Agar tidak sama semua) -->
+    <!-- FITUR SIMULASI LOGIN (Untuk tes semua dashboard tanpa login ulang) -->
     <div class="demo-switcher">
         Simulasi Role: 
         <select onchange="switchRole(this.value)">
             <option value="dinas">Dinas Pertanian</option>
             <option value="penyuluh">Penyuluh Pertanian</option>
-            <option value="autp">Petugas AUTP</option>
+            <option value="asuransi">Petugas Asuransi Pertanian</option>
             <option value="akademisi">Peneliti / Akademisi</option>
         </select>
     </div>
@@ -67,7 +68,7 @@
         <sidebar>
             <div class="sidebar-brand"><h2>SIMBA</h2><p>Dinas Pertanian - Kubu Raya</p></div>
             <ul class="nav-links">
-                <li class="active" onclick="switchPage('din-peta', this, 'view-dinas'); setTimeout(() => { mapDinas.invalidateSize(); }, 200);">📍 Peta Sensor</li>
+                <li class="active" onclick="switchPage('din-home', this, 'view-dinas'); setTimeout(() => { mapDinas.invalidateSize(); }, 200);">📍 Peta & Ringkasan</li>
                 <li onclick="switchPage('din-grafik', this, 'view-dinas'); renderChart('chartDinas', 'bulanan');">📈 Grafik Bulanan</li>
                 <li onclick="switchPage('din-laporan', this, 'view-dinas')">📥 Laporan PDF</li>
                 <li onclick="switchPage('din-pred', this, 'view-dinas')">⚠️ Prediksi Terdampak</li>
@@ -75,13 +76,29 @@
             </ul>
         </sidebar>
         <div class="main-content">
-            <!-- 1. Peta Sensor -->
-            <div id="din-peta" class="page-section active-page">
-                <div class="header-top"><h1>Peta Sensor Lahan Gambut (Desa Madu Sari)</h1></div>
-                <div class="panel">
-                    <h3>Peta Satelit Real (Kec. Sungai Raya, Kab. Kubu Raya, Kalbar)</h3>
-                    <p style="font-size:13px; color:#666;">Menampilkan pemantauan 2 lahan percontohan dengan total 6 titik sensor.</p>
-                    <div id="map-dinas" class="map"></div>
+            <!-- 1. Peta & Ringkasan Data -->
+            <div id="din-home" class="page-section active-page">
+                <div class="header-top">
+                    <h1>Dashboard Eksekutif - Dinas Pertanian (Desa Madu Sari)</h1>
+                </div>
+                <div class="card-grid">
+                    <div class="card"><h3>Status Sensor (6 Titik)</h3><div class="value" style="font-size: 18px; color: #5C4033;">5 Aktif / 1 Off</div></div>
+                    <div class="card"><h3>Rata-rata TMAT</h3><div class="value">55 cm</div></div>
+                    <div class="card"><h3>Wilayah Binaan</h3><div class="value" style="color: #5C4033;">2 Lahan / 25 Petani</div></div>
+                    <div class="card"><h3>Prediksi Terdampak</h3><div class="value">± 2.5 Hektar</div></div>
+                </div>
+                <div class="grid-section">
+                    <div class="panel">
+                        <h3>Peta Sensor Satelit (Kec. Sungai Raya, Kab. Kubu Raya, Kalbar)</h3>
+                        <p style="font-size:13px; color:#666; margin-top:0;">Pemantauan spasial 6 titik sensor di Desa Madu Sari.</p>
+                        <div id="map-dinas" class="map"></div>
+                    </div>
+                    <div class="panel">
+                        <h3>Analisis & Alternatif Mitigasi Cepat</h3>
+                        <p style="font-size: 14px; color: #444; line-height: 1.8;">
+                            Mitigasi terhadap lahan gambut di wilayah percontohan (2 lahan, 25 petani) harus diprioritaskan pada zona "Waspada" melalui pengaturan pintu air otomatis atau penutupan sekat kanal darurat sebelum mencapai batas krisis gagal panen.
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -101,7 +118,7 @@
                 <div class="header-top"><h1>Unduh Laporan PDF Otomatis</h1></div>
                 <div class="panel" style="text-align: center; padding: 50px;">
                     <h3>Dokumen Rekapitulasi Data Eksekutif</h3>
-                    <p style="color: #666; margin-bottom: 20px;">Laporan ini mencakup data 25 petani, 2 lahan, dan 6 sensor.</p>
+                    <p style="color: #666; margin-bottom: 20px;">Laporan ini mencakup data lengkap dari 25 petani, 2 lahan, dan 6 sensor.</p>
                     <a href="laporan-simba.pdf" download class="btn-pdf" style="font-size: 16px; padding: 15px 30px;">📥 Klik Untuk Download PDF</a>
                 </div>
             </div>
@@ -256,21 +273,21 @@
     </div>
 
 
-    <!-- ================= 3. PETUGAS AUTP ================= -->
-    <div id="view-autp" class="role-dashboard">
+    <!-- ================= 3. PETUGAS ASURANSI PERTANIAN ================= -->
+    <div id="view-asuransi" class="role-dashboard">
         <sidebar>
             <div class="sidebar-brand"><h2>SIMBA</h2><p>Asuransi Pertanian</p></div>
             <ul class="nav-links">
-                <li class="active" onclick="switchPage('autp-sensor', this, 'view-autp')">📡 Riwayat Sensor</li>
-                <li onclick="switchPage('autp-alarm', this, 'view-autp')">🚨 Bukti Alarm</li>
-                <li onclick="switchPage('autp-sms', this, 'view-autp')">📱 Riwayat SMS</li>
-                <li onclick="switchPage('autp-laporan', this, 'view-autp')">📋 Laporan Penyuluh</li>
-                <li onclick="switchPage('autp-klaim', this, 'view-autp')">✅ Validasi Klaim AUTP</li>
+                <li class="active" onclick="switchPage('asuransi-sensor', this, 'view-asuransi')">📡 Riwayat Sensor</li>
+                <li onclick="switchPage('asuransi-alarm', this, 'view-asuransi')">🚨 Bukti Alarm</li>
+                <li onclick="switchPage('asuransi-sms', this, 'view-asuransi')">📱 Riwayat SMS</li>
+                <li onclick="switchPage('asuransi-laporan', this, 'view-asuransi')">📋 Laporan Penyuluh</li>
+                <li onclick="switchPage('asuransi-klaim', this, 'view-asuransi')">✅ Validasi Klaim Asuransi</li>
             </ul>
         </sidebar>
         <div class="main-content">
             <!-- 1. Riwayat Sensor -->
-            <div id="autp-sensor" class="page-section active-page">
+            <div id="asuransi-sensor" class="page-section active-page">
                 <div class="header-top"><h1>Riwayat Sensor Lahan</h1></div>
                 <div class="panel">
                     <h3>Log Data Historis TMAT (6 Sensor di 2 Lahan)</h3>
@@ -289,7 +306,7 @@
             </div>
 
             <!-- 2. Bukti Alarm -->
-            <div id="autp-alarm" class="page-section">
+            <div id="asuransi-alarm" class="page-section">
                 <div class="header-top"><h1>Bukti Alarm Sistem</h1></div>
                 <div class="panel">
                     <h3>Catatan Aktivasi Alarm Darurat (TMAT > 60 cm)</h3>
@@ -303,7 +320,7 @@
             </div>
 
             <!-- 3. Riwayat SMS -->
-            <div id="autp-sms" class="page-section">
+            <div id="asuransi-sms" class="page-section">
                 <div class="header-top"><h1>Riwayat SMS Peringatan Dini</h1></div>
                 <div class="panel">
                     <h3>Log Pengiriman SMS ke 25 Petani (Bukti Mitigasi)</h3>
@@ -317,7 +334,7 @@
             </div>
 
             <!-- 4. Laporan dari Penyuluh -->
-            <div id="autp-laporan" class="page-section">
+            <div id="asuransi-laporan" class="page-section">
                 <div class="header-top"><h1>Laporan dari Penyuluh Lapangan</h1></div>
                 <div class="panel">
                     <h3>Tinjauan Dokumen Verifikasi Lapangan</h3>
@@ -330,9 +347,9 @@
                 </div>
             </div>
 
-            <!-- 5. Validasi Klaim AUTP -->
-            <div id="autp-klaim" class="page-section">
-                <div class="header-top"><h1>Validasi Klaim AUTP</h1></div>
+            <!-- 5. Validasi Klaim Asuransi -->
+            <div id="asuransi-klaim" class="page-section">
+                <div class="header-top"><h1>Validasi Klaim Asuransi Pertanian</h1></div>
                 <div class="panel">
                     <h3>Pencocokan Data Pengajuan vs Data Sensor</h3>
                     <table>
@@ -438,8 +455,10 @@
         let mapDinas, mapPenyuluh;
 
         window.onload = function() {
-            // Default selalu buka dinas saat pertama kali di reload
-            switchRole('dinas');
+            // Default selalu buka dinas saat pertama kali di reload jika tidak ada data localStorage
+            const role = localStorage.getItem('simba_role') || 'dinas';
+            document.querySelector('.demo-switcher select').value = role;
+            switchRole(role);
         };
 
         function switchRole(role) {
@@ -570,8 +589,8 @@
         }
 
         function logout() {
-            alert("Sistem Logout ditekan. Kembali ke halaman utama.");
-            // window.location.href = 'index.html';
+            localStorage.removeItem('simba_role');
+            window.location.href = 'index.html';
         }
     </script>
 </body>
