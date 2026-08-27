@@ -48,13 +48,14 @@
 </head>
 <body>
 
+    <!-- ================= 1. DINAS PERTANIAN ================= -->
     <div id="view-dinas" class="role-dashboard">
         <sidebar>
             <div class="sidebar-brand"><h2>SIMBA</h2><p>Dinas Pertanian - Kubu Raya</p></div>
             <ul class="nav-links">
                 <li class="active" onclick="switchPage('din-home', this, 'view-dinas')">Peta & Ringkasan</li>
                 <li onclick="switchPage('din-status', this, 'view-dinas')">Panduan Status & Kondisi</li>
-                <li onclick="switchPage('din-monitoring', this, 'view-dinas')">Monitoring Seluruh Sensor</li>
+                <li onclick="switchPage('din-monitoring', this, 'view-dinas')">Monitoring 6 Sensor</li>
                 <li onclick="switchPage('din-grafik', this, 'view-dinas'); renderChart('chartDinas', 'bulanan');">Grafik Bulanan</li>
                 <li onclick="switchPage('din-pred', this, 'view-dinas')">Prediksi Lahan Terdampak</li>
                 <li onclick="switchPage('din-laporan', this, 'view-dinas')">Unduh Laporan PDF</li>
@@ -75,16 +76,17 @@
                 </div>
                 <div class="grid-section">
                     <div class="panel">
-                        <h3>Peta Satelit Ril (2 Lahan Pilot Project, Desa Madu Sari)</h3>
+                        <h3>Peta Status 6 Titik Sensor (2 Lahan di Desa Madu Sari)</h3>
                         <div id="map-dinas" class="map"></div>
                     </div>
                     <div class="panel">
                         <h3>Analisis & Mitigasi Cepat</h3>
-                        <p style="font-size: 13px; color: #555; line-height: 1.6;">Pemantauan di 2 lahan binaan yang mencakup 25 petani melalui pengaturan sekat kanal dan kontrol 6 titik sensor.</p>
+                        <p style="font-size: 13px; color: #555; line-height: 1.6;">Pemantauan di 2 lahan binaan yang mencakup 25 petani melalui kontrol persis 6 titik sensor.</p>
                     </div>
                 </div>
             </div>
 
+            <!-- TABEL STATUS KONDISI & TINDAK LANJUT -->
             <div id="din-status" class="page-section">
                 <div class="header-top"><h1>Matriks Status, Kondisi, dan Tindak Lanjut Lahan</h1></div>
                 <div class="panel">
@@ -128,8 +130,9 @@
                 </div>
             </div>
 
+            <!-- MONITORING 6 SENSOR (3 SENSOR PER LAHAN) -->
             <div id="din-monitoring" class="page-section">
-                <div class="header-top"><h1>Monitoring Seluruh Sensor (6 Titik di 2 Lahan)</h1></div>
+                <div class="header-top"><h1>Monitoring 6 Sensor (3 Sensor per Lahan)</h1></div>
                 <div class="panel">
                     <table>
                         <thead><tr><th>ID Sensor</th><th>Lokasi Lahan</th><th>Posisi Sensor</th><th>TMAT</th><th>Status</th></tr></thead>
@@ -179,6 +182,7 @@
     </div>
 
 
+    <!-- ================= 2. PENYULUH PERTANIAN ================= -->
     <div id="view-penyuluh" class="role-dashboard">
         <sidebar>
             <div class="sidebar-brand"><h2>SIMBA</h2><p>Penyuluh Pertanian</p></div>
@@ -209,6 +213,7 @@
                 </div>
             </div>
 
+            <!-- HALAMAN STATUS UNTUK PENYULUH -->
             <div id="pen-status" class="page-section">
                 <div class="header-top"><h1>Panduan Status, Kondisi, dan Tindak Lanjut</h1></div>
                 <div class="panel">
@@ -266,7 +271,7 @@
             </div>
 
             <div id="pen-peta" class="page-section">
-                <div class="header-top"><h1>Peta Satelit Sensor (2 Lahan di Desa Madu Sari)</h1></div>
+                <div class="header-top"><h1>Peta Status 6 Titik Sensor (Desa Madu Sari)</h1></div>
                 <div class="panel"><div id="map-penyuluh" class="map"></div></div>
             </div>
 
@@ -295,12 +300,13 @@
     </div>
 
 
+    <!-- ================= 3. ASURANSI PERTANIAN ================= -->
     <div id="view-autp" class="role-dashboard">
         <sidebar>
             <div class="sidebar-brand"><h2>SIMBA</h2><p>Asuransi Pertanian</p></div>
             <ul class="nav-links">
                 <li class="active" onclick="switchPage('autp-klaim', this, 'view-autp')">Validasi Klaim Asuransi</li>
-                <li onclick="switchPage('autp-sensor', this, 'view-autp')">Riwayat Sensor</li>
+                <li onclick="switchPage('autp-sensor', this, 'view-autp')">Riwayat 6 Sensor</li>
                 <li onclick="switchPage('autp-alarm', this, 'view-autp')">Bukti Alarm</li>
                 <li onclick="switchPage('autp-sms', this, 'view-autp')">Riwayat SMS</li>
                 <li onclick="switchPage('autp-laporan', this, 'view-autp')">Laporan Penyuluh</li>
@@ -314,15 +320,15 @@
                     <table>
                         <thead><tr><th>Petani</th><th>Lokasi Lahan</th><th>Sebab Pengajuan</th><th>Verifikasi TMAT Sensor</th><th>Aksi</th></tr></thead>
                         <tbody>
-                            <tr><td>Pak Slamet (Kelompok Tani 1)</td><td>Lahan 1</td><td>Gagal Panen (Kekeringan)</td><td><span class="badge-kritis">72 cm (Valid Kritis)</span></td><td><button style="background:green; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">Setujui Klaim</button></td></tr>
-                            <tr><td>Bpk. Supardi (Kelompok Tani 2)</td><td>Lahan 2</td><td>Gagal Panen (Kekeringan)</td><td><span class="badge-kritis">70 cm (Valid Kritis)</span></td><td><button style="background:green; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">Setujui Klaim</button></td></tr>
+                            <tr><td>Pak Slamet (Kelompok Tani 1)</td><td>Lahan 1</td><td>Gagal Panen (Kekeringan)</td><td><span class="badge-kritis">SNS-003: 60 cm (Waspada)</span></td><td><button style="background:green; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">Setujui Klaim</button></td></tr>
+                            <tr><td>Bpk. Supardi (Kelompok Tani 2)</td><td>Lahan 2</td><td>Gagal Panen (Kekeringan)</td><td><span class="badge-kritis">SNS-006: Pemeliharaan</span></td><td><button style="background:green; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">Setujui Klaim</button></td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
             <div id="autp-sensor" class="page-section">
-                <div class="header-top"><h1>Riwayat Sensor Lahan</h1></div>
+                <div class="header-top"><h1>Riwayat 6 Sensor Lahan</h1></div>
                 <div class="panel">
                     <h3>Log Data Historis (6 Sensor di 2 Lahan)</h3>
                     <table>
@@ -333,6 +339,7 @@
                             <tr><td>SNS-003</td><td>Lahan 1 (Jauh Kanal)</td><td>60 cm</td><td><span style="color:#EF6C00; font-weight:bold;">Waspada</span></td></tr>
                             <tr><td>SNS-004</td><td>Lahan 2 (Dekat Kanal)</td><td>44 cm</td><td><span style="color:#2E7D32; font-weight:bold;">Normal</span></td></tr>
                             <tr><td>SNS-005</td><td>Lahan 2 (Tengah)</td><td>53 cm</td><td><span style="color:#EF6C00; font-weight:bold;">Waspada</span></td></tr>
+                            <tr><td>SNS-006</td><td>Lahan 2 (Jauh Kanal)</td><td>-</td><td><span class="badge-off">Pemeliharaan</span></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -358,7 +365,7 @@
                     <table>
                         <thead><tr><th>Waktu Kirim</th><th>Penerima</th><th>Isi Pesan SMS</th><th>Status</th></tr></thead>
                         <tbody>
-                            <tr><td>18 Agu 2026, 08:15 WIB</td><td>25 Petani Lahan 1 & 2</td><td>"Peringatan TMAT > 60cm. Segera lakukan penutupan pintu air kanal."</td><td><span style="color:green; font-weight:bold;">Terkirim</span></td></tr>
+                            <tr><td>18 Agu 2026, 08:15 WIB</td><td>25 Petani Lahan 1 & 2</td><td>"Peringatan TMAT mencapai batas waspada. Segera lakukan penutupan pintu air kanal."</td><td><span style="color:green; font-weight:bold;">Terkirim</span></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -380,6 +387,7 @@
     </div>
 
 
+    <!-- ================= 4. PENELITI / AKADEMISI ================= -->
     <div id="view-akademisi" class="role-dashboard">
         <sidebar>
             <div class="sidebar-brand"><h2>SIMBA</h2><p>Peneliti & Akademisi</p></div>
@@ -432,7 +440,7 @@
                     <table>
                         <thead><tr><th>Parameter Uji</th><th>Nilai Capaian</th><th>Keterangan Standar Jurnal</th></tr></thead>
                         <tbody>
-                            <tr><td>Tingkat Uptime Data Sensor</td><td>95.8%</td><td><span style="color:green; font-weight:bold;">Sangat Layak ( > 90% )</span></td></tr>
+                            <tr><td>Tingkat Uptime Data Sensor (6 Unit)</td><td>95.8%</td><td><span style="color:green; font-weight:bold;">Sangat Layak ( > 90% )</span></td></tr>
                             <tr><td>Koefisien Kalibrasi Manual</td><td>0.97</td><td><span style="color:green; font-weight:bold;">Akurasi Tinggi</span></td></tr>
                             <tr><td>Missing Values / Outlier</td><td>&lt; 2.1%</td><td><span style="color:green; font-weight:bold;">Toleransi Akademik Terpenuhi</span></td></tr>
                         </tbody>
@@ -447,7 +455,7 @@
                     <table>
                         <thead><tr><th>Tanggal</th><th>Topik Pengamatan Lapangan</th><th>Kesesuaian Data Sensor</th><th>Kesimpulan Analisis</th></tr></thead>
                         <tbody>
-                            <tr><td>18 Agu 2026</td><td>Verifikasi kelembaban tanah Lahan 1 & 2</td><td>Sesuai (Sensor IoT aktif)</td><td>Validasi empiris terbukti akurat</td></tr>
+                            <tr><td>18 Agu 2026</td><td>Verifikasi kelembaban tanah Lahan 1 & 2</td><td>Sesuai (6 Sensor IoT aktif terpantau)</td><td>Validasi empiris terbukti akurat</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -456,6 +464,7 @@
     </div>
 
 
+    <!-- SCRIPTS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -548,9 +557,14 @@
                     attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS'
                 }).addTo(map);
 
-                // Marker untuk 2 Lahan Pilot Project di Desa Madu Sari
-                L.marker([-0.1490, 109.4120]).addTo(map).bindPopup("<b>Lahan 1 (Blok A)</b><br>Desa Madu Sari, Kubu Raya<br>3 Sensor Aktif");
-                L.marker([-0.1535, 109.4182]).addTo(map).bindPopup("<b>Lahan 2 (Blok B)</b><br>Desa Madu Sari, Kubu Raya<br>3 Sensor (1 Pemeliharaan)");
+                // 6 Titik Sensor individual (3 di Lahan 1, 3 di Lahan 2)
+                L.marker([-0.1480, 109.4100]).addTo(map).bindPopup("<b>SNS-001</b><br>Lahan 1 (Dekat Kanal)<br>Status: Aktif (Normal)");
+                L.marker([-0.1495, 109.4130]).addTo(map).bindPopup("<b>SNS-002</b><br>Lahan 1 (Tengah)<br>Status: Aktif (Normal)");
+                L.marker([-0.1510, 109.4150]).addTo(map).bindPopup("<b>SNS-003</b><br>Lahan 1 (Jauh Kanal)<br>Status: Aktif (Waspada)");
+
+                L.marker([-0.1550, 109.4190]).addTo(map).bindPopup("<b>SNS-004</b><br>Lahan 2 (Dekat Kanal)<br>Status: Aktif (Normal)");
+                L.marker([-0.1565, 109.4210]).addTo(map).bindPopup("<b>SNS-005</b><br>Lahan 2 (Tengah)<br>Status: Aktif (Waspada)");
+                L.marker([-0.1580, 109.4230]).addTo(map).bindPopup("<b>SNS-006</b><br>Lahan 2 (Jauh Kanal)<br>Status: Pemeliharaan (Off)");
             }
         }
 
