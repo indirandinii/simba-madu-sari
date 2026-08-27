@@ -7,158 +7,146 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #F9F6F0; 
+            margin: 0;
+            background-color: #F9F6F0; /* Warna latar senada dengan dashboard */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
         }
 
-        .login-card {
-            background-color: #FFFFFF;
-            width: 100%;
-            max-width: 400px;
-            padding: 40px 30px;
+        .login-container {
+            background-color: white;
+            padding: 40px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(92, 64, 51, 0.1);
-            border-top: 5px solid #5C4033;
-        }
-
-        .login-header {
+            width: 100%;
+            max-width: 400px;
+            border-top: 6px solid #5C4033;
             text-align: center;
-            margin-bottom: 30px;
         }
 
-        .login-header h1 {
-            color: #5C4033; 
-            font-size: 32px;
-            margin: 0 0 10px 0;
-            letter-spacing: 2px;
-        }
-
-        .login-header p {
-            color: #795548;
-            font-size: 14px;
+        .brand-title {
             margin: 0;
-            line-height: 1.5;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
+            font-size: 32px;
             color: #5C4033;
-            font-weight: 600;
-            font-size: 14px;
+            font-weight: bold;
         }
 
-        .form-group input, 
-        .form-group select {
+        .brand-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 30px;
+            margin-top: 5px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            color: #5C4033;
+            margin-bottom: 8px;
+        }
+
+        .input-group input, .input-group select {
             width: 100%;
             padding: 12px;
-            border: 1px solid #D7CCC8;
-            border-radius: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
             box-sizing: border-box;
             font-size: 14px;
-            background-color: #FAFAFA;
+            font-family: inherit;
         }
 
-        .form-group input:focus, 
-        .form-group select:focus {
+        .input-group input:focus, .input-group select:focus {
             outline: none;
-            border-color: #5C4033;
-            box-shadow: 0 0 5px rgba(92, 64, 51, 0.3);
-            background-color: #FFFFFF;
+            border-color: #8D4004;
+            box-shadow: 0 0 5px rgba(141, 64, 4, 0.2);
         }
 
-        .login-btn {
-            width: 100%;
-            padding: 14px;
-            background-color: #5C4033;
+        .btn-login {
+            background-color: #8D4004;
             color: white;
             border: none;
-            border-radius: 8px;
+            width: 100%;
+            padding: 14px;
             font-size: 16px;
             font-weight: bold;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background 0.3s;
+            margin-top: 10px;
         }
 
-        .login-btn:hover {
-            background-color: #7B4B3A;
+        .btn-login:hover {
+            background-color: #6E3103;
         }
 
-        .help-text {
-            text-align: center;
-            margin-top: 20px;
+        .footer-text {
+            margin-top: 25px;
             font-size: 12px;
-            color: #8D6E63;
+            color: #999;
         }
     </style>
 </head>
 <body>
 
-    <div class="login-card">
-        <div class="login-header">
-            <h1>SIMBA</h1>
-            <p>Sistem Inovasi Memantau Tinggi Muka Air Tanah Lahan Gambut<br><b>Desa Madu Sari</b></p>
-        </div>
+    <div class="login-container">
+        <h1 class="brand-title">SIMBA</h1>
+        <p class="brand-subtitle">Sistem Informasi Monitoring Lahan Gambut<br>Desa Madu Sari</p>
 
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" placeholder="Masukkan username Anda" required>
+        <!-- FORM LOGIN -->
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="input-group">
+                <label for="username">Username / Email</label>
+                <input type="text" id="username" placeholder="Masukkan username..." required>
             </div>
-
-            <div class="form-group">
+            
+            <div class="input-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Masukkan password Anda" required>
+                <input type="password" id="password" placeholder="Masukkan password..." required>
             </div>
 
-            <div class="form-group">
-                <label for="role">Masuk Sebagai</label>
+            <div class="input-group">
+                <label for="role">Masuk Sebagai (Pilih Akses / Role)</label>
                 <select id="role" required>
-                    <option value="" disabled selected>Pilih Peran Anda...</option>
+                    <option value="" disabled selected>-- Pilih Peran --</option>
+                    <option value="dinas">Dinas Pertanian</option>
                     <option value="penyuluh">Penyuluh Pertanian</option>
-                    <option value="dinas">Dinas Pertanian Madu Sari</option>
-                    <option value="autp">Petugas Asuransi AUTP</option>
+                    <option value="autp">Petugas Asuransi (AUTP)</option>
                     <option value="akademisi">Peneliti / Akademisi</option>
                 </select>
             </div>
 
-            <button type="submit" class="login-btn">Masuk ke Sistem</button>
+            <button type="submit" class="btn-login">Masuk ke Dashboard</button>
         </form>
 
-        <div class="help-text">
-            Butuh bantuan akses? Hubungi Admin SIGAP.
-        </div>
+        <p class="footer-text">© 2026 - Pilot Project Desa Madu Sari</p>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); 
-            const role = document.getElementById('role').value;
-            const username = document.getElementById('username').value;
+        function handleLogin(event) {
+            // Mencegah form melakukan refresh halaman bawaan
+            event.preventDefault();
 
-            // Mengarahkan sesuai peran yang dipilih ke dashboard.html
-            if (role === 'penyuluh') {
-                alert('Selamat datang, ' + username + '! Masuk sebagai Penyuluh Pertanian.');
-            } else if (role === 'dinas') {
-                alert('Selamat datang, ' + username + '! Masuk sebagai Dinas Pertanian.');
-            } else if (role === 'autp') {
-                alert('Selamat datang, ' + username + '! Masuk sebagai Petugas AUTP.');
-            } else if (role === 'akademisi') {
-                alert('Selamat datang, ' + username + '! Masuk sebagai Peneliti/Akademisi.');
+            // Mengambil nilai role yang dipilih dari dropdown
+            const roleSelect = document.getElementById('role').value;
+
+            if (roleSelect) {
+                // Menyimpan role ke dalam localStorage browser
+                localStorage.setItem('simba_role', roleSelect);
+                
+                // Mengarahkan ke file dashboard.html
+                window.location.href = 'dashboard.html';
+            } else {
+                alert("Harap pilih peran (role) terlebih dahulu!");
             }
-
-            // Langsung masuk ke halaman dashboard utama
-            window.location.href = 'dashboard.html';
-        });
+        }
     </script>
-
 </body>
 </html>
