@@ -8,7 +8,7 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            background-color: #F9F6F0; /* Warna latar senada dengan dashboard */
+            background-color: #F9F6F0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -118,7 +118,7 @@
                     <option value="" disabled selected>-- Pilih Peran --</option>
                     <option value="dinas">Dinas Pertanian</option>
                     <option value="penyuluh">Penyuluh Pertanian</option>
-                    <option value="autp">Petugas Asuransi (AUTP)</option>
+                    <option value="asuransi">Petugas Asuransi Pertanian</option>
                     <option value="akademisi">Peneliti / Akademisi</option>
                 </select>
             </div>
@@ -131,17 +131,11 @@
 
     <script>
         function handleLogin(event) {
-            // Mencegah form melakukan refresh halaman bawaan
             event.preventDefault();
-
-            // Mengambil nilai role yang dipilih dari dropdown
             const roleSelect = document.getElementById('role').value;
 
             if (roleSelect) {
-                // Menyimpan role ke dalam localStorage browser
                 localStorage.setItem('simba_role', roleSelect);
-                
-                // Mengarahkan ke file dashboard.html
                 window.location.href = 'dashboard.html';
             } else {
                 alert("Harap pilih peran (role) terlebih dahulu!");
