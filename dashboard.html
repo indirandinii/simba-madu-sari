@@ -14,12 +14,16 @@
 
         .role-dashboard { display: none; width: 100%; min-height: 100vh; }
         
-        sidebar { width: 260px; background-color: #5C4033; color: white; height: 100vh; position: fixed; padding: 20px; box-sizing: border-box; overflow-y: auto; z-index: 1000; }
+        sidebar { width: 260px; background-color: #5C4033; color: white; height: 100vh; position: fixed; padding: 20px; box-sizing: border-box; overflow-y: auto; z-index: 1000; display: flex; flex-direction: column; justify-content: space-between; }
+        .sidebar-top { flex-grow: 1; }
         .sidebar-brand h2 { margin: 0 0 5px 0; font-size: 24px; color: #FFF; }
         .sidebar-brand p { font-size: 11px; color: #D2B48C; margin: 0 0 30px 0; }
         .nav-links { list-style: none; padding: 0; margin: 0; }
         .nav-links li { padding: 12px 15px; margin-bottom: 8px; border-radius: 6px; cursor: pointer; color: #F9F6F0; transition: background 0.2s; font-size: 14px; }
         .nav-links li:hover, .nav-links li.active { background-color: #7B4B3A; font-weight: bold; }
+        
+        .btn-logout { background-color: #8D4004 !important; text-align: center; font-weight: bold; margin-top: 20px; }
+        .btn-logout:hover { background-color: #6E3103 !important; }
 
         .main-content { margin-left: 260px; padding: 30px 30px 30px 30px; width: calc(100% - 260px); box-sizing: border-box; }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; margin-top: 10px; }
@@ -52,7 +56,7 @@
 </head>
 <body>
 
-    <!-- FITUR SIMULASI LOGIN (Untuk tes semua dashboard tanpa login ulang) -->
+    <!-- FITUR SIMULASI LOGIN -->
     <div class="demo-switcher">
         Simulasi Role: 
         <select onchange="switchRole(this.value)">
@@ -66,21 +70,23 @@
     <!-- ================= 1. DINAS PERTANIAN ================= -->
     <div id="view-dinas" class="role-dashboard">
         <sidebar>
-            <div class="sidebar-brand"><h2>SIMBA</h2><p>Dinas Pertanian - Kubu Raya</p></div>
+            <div class="sidebar-top">
+                <div class="sidebar-brand"><h2>SIMBA</h2><p>Dinas Pertanian - Kubu Raya</p></div>
+                <ul class="nav-links">
+                    <li class="active" onclick="switchPage('din-home', this, 'view-dinas'); setTimeout(() => { mapDinas.invalidateSize(); }, 200);">📍 Peta & Ringkasan</li>
+                    <li onclick="switchPage('din-grafik', this, 'view-dinas'); renderChart('chartDinas', 'bulanan');">📈 Grafik Bulanan</li>
+                    <li onclick="switchPage('din-laporan', this, 'view-dinas')">📥 Laporan PDF</li>
+                    <li onclick="switchPage('din-pred', this, 'view-dinas')">⚠️ Prediksi Terdampak</li>
+                    <li onclick="switchPage('din-monitoring', this, 'view-dinas')">🖥️ Monitoring Sensor</li>
+                </ul>
+            </div>
             <ul class="nav-links">
-                <li class="active" onclick="switchPage('din-home', this, 'view-dinas'); setTimeout(() => { mapDinas.invalidateSize(); }, 200);">📍 Peta & Ringkasan</li>
-                <li onclick="switchPage('din-grafik', this, 'view-dinas'); renderChart('chartDinas', 'bulanan');">📈 Grafik Bulanan</li>
-                <li onclick="switchPage('din-laporan', this, 'view-dinas')">📥 Laporan PDF</li>
-                <li onclick="switchPage('din-pred', this, 'view-dinas')">⚠️ Prediksi Terdampak</li>
-                <li onclick="switchPage('din-monitoring', this, 'view-dinas')">🖥️ Monitoring Sensor</li>
+                <li class="btn-logout" onclick="logout()">🚪 Log Out</li>
             </ul>
         </sidebar>
         <div class="main-content">
-            <!-- 1. Peta & Ringkasan Data -->
             <div id="din-home" class="page-section active-page">
-                <div class="header-top">
-                    <h1>Dashboard Eksekutif - Dinas Pertanian (Desa Madu Sari)</h1>
-                </div>
+                <div class="header-top"><h1>Dashboard Eksekutif - Dinas Pertanian (Desa Madu Sari)</h1></div>
                 <div class="card-grid">
                     <div class="card"><h3>Status Sensor (6 Titik)</h3><div class="value" style="font-size: 18px; color: #5C4033;">5 Aktif / 1 Off</div></div>
                     <div class="card"><h3>Rata-rata TMAT</h3><div class="value">55 cm</div></div>
@@ -102,7 +108,6 @@
                 </div>
             </div>
 
-            <!-- 2. Grafik Bulanan -->
             <div id="din-grafik" class="page-section">
                 <div class="header-top"><h1>Grafik Bulanan TMAT</h1></div>
                 <div class="panel">
@@ -113,7 +118,6 @@
                 </div>
             </div>
 
-            <!-- 3. Laporan PDF Otomatis -->
             <div id="din-laporan" class="page-section">
                 <div class="header-top"><h1>Unduh Laporan PDF Otomatis</h1></div>
                 <div class="panel" style="text-align: center; padding: 50px;">
@@ -123,7 +127,6 @@
                 </div>
             </div>
 
-            <!-- 4. Prediksi Luas Lahan Gambut Terdampak -->
             <div id="din-pred" class="page-section">
                 <div class="header-top"><h1>Prediksi Luas Lahan Gambut Terdampak (Kondisi Tidak Normal)</h1></div>
                 <div class="panel">
@@ -136,7 +139,6 @@
                 </div>
             </div>
 
-            <!-- 5. Monitoring Seluruh Sensor & Matriks -->
             <div id="din-monitoring" class="page-section">
                 <div class="header-top"><h1>Monitoring Seluruh Sensor (6 Titik) & Matriks Status</h1></div>
                 <div class="panel">
@@ -175,17 +177,21 @@
     <!-- ================= 2. PENYULUH PERTANIAN ================= -->
     <div id="view-penyuluh" class="role-dashboard">
         <sidebar>
-            <div class="sidebar-brand"><h2>SIMBA</h2><p>Penyuluh Pertanian</p></div>
+            <div class="sidebar-top">
+                <div class="sidebar-brand"><h2>SIMBA</h2><p>Penyuluh Pertanian</p></div>
+                <ul class="nav-links">
+                    <li class="active" onclick="switchPage('pen-home', this, 'view-penyuluh')">🏠 Beranda & SMS</li>
+                    <li onclick="switchPage('pen-detail', this, 'view-penyuluh'); renderChart('chartPenyuluh', '7hari');">📊 Detail Sensor</li>
+                    <li onclick="switchPage('pen-peta', this, 'view-penyuluh'); setTimeout(() => { mapPenyuluh.invalidateSize(); }, 200);">📍 Peta Sensor</li>
+                    <li onclick="switchPage('pen-analisis', this, 'view-penyuluh')">📋 Analisis Kondisi</li>
+                    <li onclick="switchPage('pen-catatan', this, 'view-penyuluh')">📝 Laporan & Catatan</li>
+                </ul>
+            </div>
             <ul class="nav-links">
-                <li class="active" onclick="switchPage('pen-home', this, 'view-penyuluh')">🏠 Beranda & SMS</li>
-                <li onclick="switchPage('pen-detail', this, 'view-penyuluh'); renderChart('chartPenyuluh', '7hari');">📊 Detail Sensor</li>
-                <li onclick="switchPage('pen-peta', this, 'view-penyuluh'); setTimeout(() => { mapPenyuluh.invalidateSize(); }, 200);">📍 Peta Sensor</li>
-                <li onclick="switchPage('pen-analisis', this, 'view-penyuluh')">📋 Analisis Kondisi</li>
-                <li onclick="switchPage('pen-catatan', this, 'view-penyuluh')">📝 Laporan & Catatan</li>
+                <li class="btn-logout" onclick="logout()">🚪 Log Out</li>
             </ul>
         </sidebar>
         <div class="main-content">
-            <!-- 1. Beranda Ringkasan -->
             <div id="pen-home" class="page-section active-page">
                 <div class="header-top"><h1>Beranda Ringkasan Pemantauan</h1></div>
                 <div class="card-grid">
@@ -203,7 +209,6 @@
                 </div>
             </div>
 
-            <!-- 2. Detail Sensor & Grafik -->
             <div id="pen-detail" class="page-section">
                 <div class="header-top"><h1>Detail & Grafik Sensor (Tinggi Muka Air Tanah)</h1></div>
                 <div class="panel">
@@ -225,7 +230,6 @@
                 </div>
             </div>
 
-            <!-- 3. Peta Sensor -->
             <div id="pen-peta" class="page-section">
                 <div class="header-top"><h1>Peta Sensor - Desa Madu Sari, Kec. Sungai Raya, Kab. Kubu Raya</h1></div>
                 <div class="panel">
@@ -234,7 +238,6 @@
                 </div>
             </div>
 
-            <!-- 4. Analisis Kondisi (Termasuk Panduan) -->
             <div id="pen-analisis" class="page-section">
                 <div class="header-top"><h1>Analisis Kondisi Lapangan</h1></div>
                 <div class="panel">
@@ -255,7 +258,6 @@
                 </div>
             </div>
 
-            <!-- 5. Laporan dan Catatan Penyuluh -->
             <div id="pen-catatan" class="page-section">
                 <div class="header-top"><h1>Laporan dan Catatan Penyuluh</h1></div>
                 <div class="panel">
@@ -276,17 +278,21 @@
     <!-- ================= 3. PETUGAS ASURANSI PERTANIAN ================= -->
     <div id="view-asuransi" class="role-dashboard">
         <sidebar>
-            <div class="sidebar-brand"><h2>SIMBA</h2><p>Asuransi Pertanian</p></div>
+            <div class="sidebar-top">
+                <div class="sidebar-brand"><h2>SIMBA</h2><p>Asuransi Pertanian</p></div>
+                <ul class="nav-links">
+                    <li class="active" onclick="switchPage('asuransi-sensor', this, 'view-asuransi')">📡 Riwayat Sensor</li>
+                    <li onclick="switchPage('asuransi-alarm', this, 'view-asuransi')">🚨 Bukti Alarm</li>
+                    <li onclick="switchPage('asuransi-sms', this, 'view-asuransi')">📱 Riwayat SMS</li>
+                    <li onclick="switchPage('asuransi-laporan', this, 'view-asuransi')">📋 Laporan Penyuluh</li>
+                    <li onclick="switchPage('asuransi-klaim', this, 'view-asuransi')">✅ Validasi Klaim Asuransi</li>
+                </ul>
+            </div>
             <ul class="nav-links">
-                <li class="active" onclick="switchPage('asuransi-sensor', this, 'view-asuransi')">📡 Riwayat Sensor</li>
-                <li onclick="switchPage('asuransi-alarm', this, 'view-asuransi')">🚨 Bukti Alarm</li>
-                <li onclick="switchPage('asuransi-sms', this, 'view-asuransi')">📱 Riwayat SMS</li>
-                <li onclick="switchPage('asuransi-laporan', this, 'view-asuransi')">📋 Laporan Penyuluh</li>
-                <li onclick="switchPage('asuransi-klaim', this, 'view-asuransi')">✅ Validasi Klaim Asuransi</li>
+                <li class="btn-logout" onclick="logout()">🚪 Log Out</li>
             </ul>
         </sidebar>
         <div class="main-content">
-            <!-- 1. Riwayat Sensor -->
             <div id="asuransi-sensor" class="page-section active-page">
                 <div class="header-top"><h1>Riwayat Sensor Lahan</h1></div>
                 <div class="panel">
@@ -305,7 +311,6 @@
                 </div>
             </div>
 
-            <!-- 2. Bukti Alarm -->
             <div id="asuransi-alarm" class="page-section">
                 <div class="header-top"><h1>Bukti Alarm Sistem</h1></div>
                 <div class="panel">
@@ -319,7 +324,6 @@
                 </div>
             </div>
 
-            <!-- 3. Riwayat SMS -->
             <div id="asuransi-sms" class="page-section">
                 <div class="header-top"><h1>Riwayat SMS Peringatan Dini</h1></div>
                 <div class="panel">
@@ -333,7 +337,6 @@
                 </div>
             </div>
 
-            <!-- 4. Laporan dari Penyuluh -->
             <div id="asuransi-laporan" class="page-section">
                 <div class="header-top"><h1>Laporan dari Penyuluh Lapangan</h1></div>
                 <div class="panel">
@@ -347,7 +350,6 @@
                 </div>
             </div>
 
-            <!-- 5. Validasi Klaim Asuransi -->
             <div id="asuransi-klaim" class="page-section">
                 <div class="header-top"><h1>Validasi Klaim Asuransi Pertanian</h1></div>
                 <div class="panel">
@@ -368,17 +370,21 @@
     <!-- ================= 4. PENELITI / AKADEMISI ================= -->
     <div id="view-akademisi" class="role-dashboard">
         <sidebar>
-            <div class="sidebar-brand"><h2>SIMBA</h2><p>Peneliti & Akademisi</p></div>
+            <div class="sidebar-top">
+                <div class="sidebar-brand"><h2>SIMBA</h2><p>Peneliti & Akademisi</p></div>
+                <ul class="nav-links">
+                    <li class="active" onclick="switchPage('aka-beranda', this, 'view-akademisi')">📊 Beranda Ringkasan</li>
+                    <li onclick="switchPage('aka-grafik', this, 'view-akademisi'); renderChart('chartAkademisi', '7hari');">📈 Grafik TMAT</li>
+                    <li onclick="switchPage('aka-tren', this, 'view-akademisi')">📉 Analisis Tren</li>
+                    <li onclick="switchPage('aka-kualitas', this, 'view-akademisi')">⚙️ Status Kualitas Data</li>
+                    <li onclick="switchPage('aka-laporan', this, 'view-akademisi')">📋 Laporan Penyuluh</li>
+                </ul>
+            </div>
             <ul class="nav-links">
-                <li class="active" onclick="switchPage('aka-beranda', this, 'view-akademisi')">📊 Beranda Ringkasan</li>
-                <li onclick="switchPage('aka-grafik', this, 'view-akademisi'); renderChart('chartAkademisi', '7hari');">📈 Grafik TMAT</li>
-                <li onclick="switchPage('aka-tren', this, 'view-akademisi')">📉 Analisis Tren</li>
-                <li onclick="switchPage('aka-kualitas', this, 'view-akademisi')">⚙️ Status Kualitas Data</li>
-                <li onclick="switchPage('aka-laporan', this, 'view-akademisi')">📋 Laporan Penyuluh</li>
+                <li class="btn-logout" onclick="logout()">🚪 Log Out</li>
             </ul>
         </sidebar>
         <div class="main-content">
-            <!-- 1. Beranda Ringkasan Monitoring -->
             <div id="aka-beranda" class="page-section active-page">
                 <div class="header-top"><h1>Beranda Ringkasan Monitoring Riset</h1></div>
                 <div class="card-grid">
@@ -389,7 +395,6 @@
                 </div>
             </div>
 
-            <!-- 2. Grafik TMAT 7,30,90 hari -->
             <div id="aka-grafik" class="page-section">
                 <div class="header-top"><h1>Grafik Tinggi Muka Air Tanah (TMAT)</h1></div>
                 <div class="panel">
@@ -404,7 +409,6 @@
                 </div>
             </div>
 
-            <!-- 3. Analisis Tren -->
             <div id="aka-tren" class="page-section">
                 <div class="header-top"><h1>Analisis Tren & Regresi Spasio-Temporal</h1></div>
                 <div class="panel">
@@ -415,7 +419,6 @@
                 </div>
             </div>
 
-            <!-- 4. Status Kualitas Data -->
             <div id="aka-kualitas" class="page-section">
                 <div class="header-top"><h1>Status Kualitas & Kalibrasi Data Sensor</h1></div>
                 <div class="panel">
@@ -431,7 +434,6 @@
                 </div>
             </div>
 
-            <!-- 5. Laporan Penyuluh -->
             <div id="aka-laporan" class="page-section">
                 <div class="header-top"><h1>Tinjauan Laporan Penyuluh Lapangan</h1></div>
                 <div class="panel">
@@ -455,26 +457,22 @@
         let mapDinas, mapPenyuluh;
 
         window.onload = function() {
-            // Default selalu buka dinas saat pertama kali di reload jika tidak ada data localStorage
             const role = localStorage.getItem('simba_role') || 'dinas';
-            document.querySelector('.demo-switcher select').value = role;
+            const switcher = document.querySelector('.demo-switcher select');
+            if(switcher) switcher.value = role;
             switchRole(role);
         };
 
         function switchRole(role) {
-            // Sembunyikan semua dashboard
             document.querySelectorAll('.role-dashboard').forEach(el => el.style.display = 'none');
             
-            // Tampilkan dashboard sesuai role
             const targetView = document.getElementById('view-' + role);
             if(targetView) {
                 targetView.style.display = 'flex';
-                // Reset menu ke yang pertama
-                const firstMenu = targetView.querySelector('.nav-links li');
+                const firstMenu = targetView.querySelector('.sidebar-top .nav-links li');
                 if(firstMenu) firstMenu.click();
             }
 
-            // Inisialisasi map jika role punya fitur map dan map belum terload
             if(role === 'dinas' || role === 'penyuluh') {
                 setTimeout(() => { initMaps(role); }, 100);
             }
@@ -487,7 +485,7 @@
                 const targetPage = document.getElementById(pageId);
                 if(targetPage) targetPage.classList.add('active-page');
 
-                currentRoleView.querySelectorAll('.nav-links li').forEach(li => li.classList.remove('active'));
+                currentRoleView.querySelectorAll('.sidebar-top .nav-links li').forEach(li => li.classList.remove('active'));
                 if(element) element.classList.add('active');
             }
         }
@@ -561,7 +559,6 @@
                     attribution: 'Tiles &copy; Esri'
                 }).addTo(mapObj);
 
-                // Fungsi helper marker SVG
                 function createColoredMarker(lat, lng, color, popupText) {
                     const svgIcon = L.divIcon({
                         className: 'custom-pin',
@@ -572,7 +569,6 @@
                     return L.marker([lat, lng], {icon: svgIcon}).addTo(mapObj).bindPopup(popupText);
                 }
 
-                // 6 Titik Sensor (Warna sesuai Status: Hijau Sesuai, Orange Waspada, Abu-abu Off)
                 createColoredMarker(-0.1480, 109.4100, '#2E7D32', "<b>SNS-001 (Lahan 1)</b><br>Desa Madu Sari, Kubu Raya<br>Status: Sesuai (Normal)");
                 createColoredMarker(-0.1495, 109.4130, '#2E7D32', "<b>SNS-002 (Lahan 1)</b><br>Desa Madu Sari, Kubu Raya<br>Status: Sesuai (Normal)");
                 createColoredMarker(-0.1510, 109.4150, '#EF6C00', "<b>SNS-003 (Lahan 1)</b><br>Desa Madu Sari, Kubu Raya<br>Status: Waspada Ekologis");
